@@ -1,0 +1,23 @@
+diff --git a/logappend.c b/logappend.c
+index 00c671a..496cbe7 100755
+--- a/logappend.c
++++ b/logappend.c
+@@ -284,7 +284,7 @@ int main(int argc, char *argv[]) {
+     // Third step: Read through the log, search for relevant key (name+E/G), and get person's current location
+ 
+     int current_location = -2;
+-    buf_r = realloc(buf_r, 4);
++    buf_r = malloc(4);
+     num_read = fread(buf_r, 1, 4, log_fp);
+     int last_ts = -1;
+     while (num_read != 0) {
+@@ -347,8 +347,7 @@ int main(int argc, char *argv[]) {
+         encrypt(R.logpath, R.token);
+         exit(255);
+     }
+-    fclose(log_fp);
+-    
++
+     log_fp = fopen(R.logpath, "a");
+     char *buf;
+     int buf_len;
