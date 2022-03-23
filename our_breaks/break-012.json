@@ -1,0 +1,25 @@
+{
+    "breaks": [
+        {
+            "attacker": "SSP1",
+            "commands": [
+                {
+                    "args": [
+                        "-K",
+                        "secret",
+                        "-T",
+                        "1",
+                        "-E",
+                        "-G",
+                        "GERDA",
+                        "-A",
+                        "log"
+                    ],
+                    "program": "logappend"
+                }
+            ],
+            "target_team": "NullPtrForDays",
+            "type": "correctness"
+        }
+    ]
+}

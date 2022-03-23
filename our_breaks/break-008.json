@@ -1,0 +1,25 @@
+{
+    "breaks": [
+        {
+            "attacker": "Group8",
+            "commands": [
+                {
+                    "args": [
+                        "-K",
+                        "secret",
+                        "-T",
+                        "1",
+                        "-G",
+                        "GERDA",
+                        "-A",
+                        "-X",
+                        "log"
+                    ],
+                    "program": "logappend"
+                }
+            ],
+            "target_team": "NullPtrForDays",
+            "type": "correctness"
+        }
+    ]
+}

@@ -1,0 +1,31 @@
+{
+    "breaks": [
+        {
+            "attacker": "MSKB",
+            "commands": [
+                {
+                    "args": [
+                        "-K",
+                        "secret",
+                        "-T",
+                        "1",
+                        "-E",
+                        "Bob",
+                        "-A",
+                        "log"
+                    ],
+                    "program": "logappend"
+                },
+                {
+                    "args": [
+                        "-S",
+                        "log"
+                    ],
+                    "program": "logread"
+                }
+            ],
+            "target_team": "NullPtrForDays",
+            "type": "crash"
+        }
+    ]
+}

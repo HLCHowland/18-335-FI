@@ -1,0 +1,21 @@
+{
+    "breaks": [
+        {
+            "attacker": "MSKB",
+            "batch": "77+9Vu+/vSPvv73vv73vv73vv70Kbe+/ve+/vRZE77+9Z2Tvv71z77+9Fe+/vUzvv71X77+9FjVxGgY5ee+/vXTvv73vv73vv70nZe+/ve+/vTJfau+/veeqpSox77+977+9",
+            "commands": [
+                {
+                    "args": [
+                        "-K",
+                        "secret",
+                        "-S",
+                        "batch"
+                    ],
+                    "program": "logread"
+                }
+            ],
+            "target_team": "NullPtrForDays",
+            "type": "correctness"
+        }
+    ]
+}

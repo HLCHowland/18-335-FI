@@ -1,0 +1,20 @@
+log file format:
+(file header)
+    token_len (int)
+    token (str)
+(repeating fields for entries)
+    entry_len (int)
+    ts (int)
+    name (str)
+    E/G (char)
+    A/L (char)
+    roomID (int, -1 for gallery and >=0 for rooms)
+
+Issues To Fix:
+    general:
+        Free memory after heap usage.
+    logread.c:
+        Implement optional read feature to pass 3 optional tests.
+    logappend.c:
+        Try to read a whole file into a buf once rather than read it multiple times. In this way it is a lot more easier for decrypt. 
+        
