@@ -5,7 +5,7 @@
 #include <math.h>
 #include "crypto.h"
 
-int encrypt(char *source_file,
+int encryptfile(char *source_file,
         char key[crypto_secretstream_xchacha20poly1305_KEYBYTES])
 {
     unsigned char  buf_in[CHUNK_SIZE];
@@ -77,7 +77,7 @@ int encrypt(char *source_file,
     return 0;
 }
 
-int decrypt(char *source_file,
+int decryptfile(char *source_file,
         char key[crypto_secretstream_xchacha20poly1305_KEYBYTES])
 {
     unsigned char  buf_in[CHUNK_SIZE + crypto_secretstream_xchacha20poly1305_ABYTES];

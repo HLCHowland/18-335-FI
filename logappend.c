@@ -10,6 +10,8 @@
 #include <err.h>
 #include <errno.h>
 #include <assert.h>
+#include <ctype.h>
+
 
 #include "data.h"
 #include "crypto.h"
@@ -36,6 +38,7 @@ typedef struct _CmdLineResult {
 CmdLineResult parse_cmdline(int argc, char *argv[], int is_batch) {
   CmdLineResult R = { -1, NULL, 0, false, false, NULL, 0, -1, NULL, 0, NULL};
   int opt = -1;
+  bool invalidinput = false;
   bool EGchecked = false;
   bool ALchecked = false;
   bool nonbatch = false;
@@ -59,6 +62,12 @@ CmdLineResult parse_cmdline(int argc, char *argv[], int is_batch) {
 	    break;  
 
       case 'T':
+        for (int i = 0; i < strlen(optarg); i++){
+                if (!isdigit(optarg[i])){
+                    invalidinput = true;
+                    break;
+                }
+            }
 	    //timestamp
 	    R.ts = atoi(optarg);
         nonbatch= true;
@@ -142,6 +151,10 @@ CmdLineResult parse_cmdline(int argc, char *argv[], int is_batch) {
       default:
         //unknown option, leave
         break;
+    }
+    if(invalidinput){
+        printf("invalid\n");
+        exit(255);
     }
 
   }
@@ -259,11 +272,11 @@ int main(int argc, char *argv[]) {
         fwrite(token_len_str, 1, 4, log_fp);
         fwrite(R.token, 1, R.token_len, log_fp);
         fclose(log_fp);
-        encrypt(R.logpath, R.token);
+        encryptfile(R.logpath, R.token);
     }
 
     // Second step: check if token matches the one in existing log
-    decrypt(R.logpath, R.token);
+    decryptfile(R.logpath, R.token);
 
     // Open log read-only
     log_fp = fopen(R.logpath, "r");
@@ -277,7 +290,7 @@ int main(int argc, char *argv[]) {
     // Compare tokens
     if (strcmp(buf_r, R.token) != 0) {
         printf("invalid");
-        encrypt(R.logpath, R.token);
+        encryptfile(R.logpath, R.token);
         exit(255);
     }
 
@@ -327,24 +340,24 @@ int main(int argc, char *argv[]) {
         if (R.roomID==-1 && current_location!=-2) {
             // Person already in gallery entering again
             printf("invalid\n");
-            encrypt(R.logpath, R.token);
+            encryptfile(R.logpath, R.token);
             exit(255);
         }
         if (R.roomID>=0 && current_location!=-1) {
             printf("invalid\n");
-            encrypt(R.logpath, R.token);
+            encryptfile(R.logpath, R.token);
             exit(255);
         }
     } else {
         if (R.roomID != current_location) {
             printf("invalid\n");
-            encrypt(R.logpath, R.token);
+            encryptfile(R.logpath, R.token);
             exit(255);
         }
     }
     if (R.ts < last_ts) {
         printf("invalid\n");
-        encrypt(R.logpath, R.token);
+        encryptfile(R.logpath, R.token);
         exit(255);
     }
 
@@ -362,7 +375,7 @@ int main(int argc, char *argv[]) {
     fwrite(buf, 1, buf_len, log_fp);
     fclose(log_fp);
     free(buf);
-    encrypt(R.logpath, R.token);
+    encryptfile(R.logpath, R.token);
             
   return 0;
 }

@@ -348,7 +348,7 @@ int main(int argc, char *argv[]) {
     }
     
     // Decrypt the logfile prior to reading
-    decrypt(logpath, token);
+    decryptfile(logpath, token);
 
     log_fp = fopen(logpath, "r");
     char *buf_r;
@@ -361,7 +361,7 @@ int main(int argc, char *argv[]) {
     // Compare tokens
     if (strcmp(buf_r, token) != 0) {
         printf("invalid");
-        encrypt(logpath, token);
+        encryptfile(logpath, token);
         exit(255);
     }
 
@@ -400,7 +400,7 @@ int main(int argc, char *argv[]) {
     struct Person *first = NULL;
     fclose(log_fp);
 
-    encrypt(logpath, token);
+    encryptfile(logpath, token);
 
     if(logpath!=NULL){
     if(print_S==true){
