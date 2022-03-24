@@ -14,7 +14,7 @@ crypto.o: crypto.c
 logappend: logappend.o data.o crypto.o
 	$(CC) -g -o logappend logappend.o data.o crypto.o $(LFLAGS)
 
-logread: logread.o data.o 
+logread: logread.o data.o crypto.o
 	$(CC) $(CFLAGS) -o logread logread.o data.o crypto.o $(LFLAGS)
 
 logappend.o: logappend.c

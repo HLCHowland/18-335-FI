@@ -130,7 +130,7 @@ int decryptfile(char *source_file,
         eof = feof(fp_s);
         if (crypto_secretstream_xchacha20poly1305_pull(&st, buf_out, &out_len, &tag,
                                                        buf_in, rlen, NULL, 0) != 0) {
-            printf("invalid\n");
+            printf("integrity violation\n");
             exit(255);
 
         }

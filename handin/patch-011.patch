@@ -1,0 +1,26 @@
+diff --git a/Makefile b/Makefile
+index e9f0e21..8d6ec35 100755
+--- a/Makefile
++++ b/Makefile
+@@ -14,7 +14,7 @@ crypto.o: crypto.c
+ logappend: logappend.o data.o crypto.o
+ 	$(CC) -g -o logappend logappend.o data.o crypto.o $(LFLAGS)
+ 
+-logread: logread.o data.o 
++logread: logread.o data.o crypto.o
+ 	$(CC) $(CFLAGS) -o logread logread.o data.o crypto.o $(LFLAGS)
+ 
+ logappend.o: logappend.c
+diff --git a/crypto.c b/crypto.c
+index 88716bb..342e074 100644
+--- a/crypto.c
++++ b/crypto.c
+@@ -130,7 +130,7 @@ int decryptfile(char *source_file,
+         eof = feof(fp_s);
+         if (crypto_secretstream_xchacha20poly1305_pull(&st, buf_out, &out_len, &tag,
+                                                        buf_in, rlen, NULL, 0) != 0) {
+-            printf("invalid\n");
++            printf("integrity violation\n");
+             exit(255);
+ 
+         }
