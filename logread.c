@@ -240,6 +240,7 @@ int main(int argc, char *argv[]) {
   int token_len_input = 0;
   char* name = NULL;
   int name_len = 0;
+  bool kexist = false;
   bool print_S = false;
   bool print_R = false;
   bool print_T = false;
@@ -257,6 +258,7 @@ int main(int argc, char *argv[]) {
         token_len_input = strlen(optarg) + 1;
         token = malloc(token_len_input);
         memcpy(token, optarg, token_len_input);
+        kexist = true;
         break;
       case 'S':
         print_S = true;
@@ -338,6 +340,11 @@ int main(int argc, char *argv[]) {
     exit(255);    
   }
 
+  if(!kexist){
+    printf("invalid");
+    exit(255);
+  }
+  
 //Second step: check if token matches the one in existing log
     FILE *log_fp;
     int num_read;
