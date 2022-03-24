@@ -177,6 +177,8 @@ CmdLineResult parse_cmdline(int argc, char *argv[], int is_batch) {
 
       default:
         //unknown option, leave
+        printf("invalid\n");
+        exit(255);
         break;
     }
     if(invalidinput){
