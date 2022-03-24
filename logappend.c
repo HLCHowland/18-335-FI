@@ -191,6 +191,11 @@ CmdLineResult parse_cmdline(int argc, char *argv[], int is_batch) {
   //pick up the positional argument for log path
   if(optind < argc) {
     R.logpath_len = strlen(argv[optind]) + 1;
+    // Linux filename limit is 255 bytes
+    if (R.logpath_len > 255) {
+        printf("invalid\n");
+        exit(255);
+    }
     logpath = malloc(R.logpath_len);
     memcpy(logpath, argv[optind], R.logpath_len);
     R.logpath = logpath;
