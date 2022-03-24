@@ -1,0 +1,48 @@
+diff --git a/logappend.c b/logappend.c
+index 760aa4c..b483bc9 100755
+--- a/logappend.c
++++ b/logappend.c
+@@ -267,8 +267,10 @@ int main(int argc, char *argv[]) {
+     FILE *log_fp;
+     FILE *batch_fp;
+     int num_read;
+-    char batch_line[2048];
+-    char command_line[2100]; 
++    char *batch_line = NULL;
++    size_t len = 0;
++    ssize_t read;
++    char *command_line;
+   
+     R = parse_cmdline(argc, argv, 0);
+ 
+@@ -279,18 +281,18 @@ int main(int argc, char *argv[]) {
+             printf("invalid\n");
+             exit(255);
+         }
+-        memset(batch_line, 0, 2048);
+-        while (fgets(batch_line, 2048, batch_fp)!=NULL) {
++        while ((read = getline(&batch_line, &len, batch_fp))!=-1) {
+             // Make sure commands in batch file does not do batching
+             if (strstr(batch_line, "-B")) {
+                 printf("invalid\n");
+                 continue;
+             }
+-            memset(command_line, 0, 2100);
++            command_line = malloc(read+20);
++            memset(command_line, 0, read+20);
+             strcpy(command_line, "./logappend ");
+             strcat(command_line, batch_line);
+             system(command_line);
+-            memset(batch_line, 0, 2048);
++            memset(batch_line, 0, read);
+         }
+         return 0;
+     }
+@@ -319,6 +321,7 @@ int main(int argc, char *argv[]) {
+     num_read = fread(buf_r, 1, 4, log_fp);
+     assert(num_read==4 && "4 bytes expected for token_len");
+     int token_len = deserialize_int(buf_r);
++    buf_r = realloc(buf_r, token_len);
+     num_read = fread(buf_r, 1, token_len, log_fp);
+     assert(num_read==token_len && "num_read not equal to token_len");
+     // Compare tokens
