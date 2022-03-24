@@ -1,0 +1,35 @@
+diff --git a/logappend.c b/logappend.c
+index 71db7ae..ea33fec 100755
+--- a/logappend.c
++++ b/logappend.c
+@@ -116,6 +116,14 @@ CmdLineResult parse_cmdline(int argc, char *argv[], int is_batch) {
+         R.name_len = strlen(optarg) + 1;
+         name = malloc(R.name_len);
+         memcpy(name, optarg, R.name_len);
++
++        //check name consist of character
++        for (int i = 0; i < strlen(name); i++){
++            if (!isalpha(name[i])){
++                invalidinput = true;
++                break;
++            }
++        }
+         R.name = name;
+         R.is_employee = true;
+         
+@@ -133,6 +141,15 @@ CmdLineResult parse_cmdline(int argc, char *argv[], int is_batch) {
+         R.name_len = strlen(optarg) + 1;
+         name = malloc(R.name_len);
+         memcpy(name, optarg, R.name_len);
++
++        //check name consist of character
++        for (int i = 0; i < strlen(name); i++){
++            if (!isalpha(name[i])){
++                invalidinput = true;
++                break;
++            }
++        }
++
+         R.name = name;
+         R.is_employee = false;
+         

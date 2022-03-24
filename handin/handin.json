@@ -1,0 +1,37 @@
+{
+    "team": "NullPtrForDays",
+    "fixes": [
+      {
+        "patch": "buff_corruption-break-002.patch",
+        "breaks": ["break-002.json"]
+      },
+      {
+        "patch": "patch-001.patch",
+        "breaks": ["break-001.json"]
+      },
+      {
+        "patch": "patch-004.patch",
+        "breaks": ["break-004.json"]
+      },
+      {
+        "patch": "patch-005.patch",
+        "breaks": ["break-005.json"]
+      },
+      {
+        "patch": "patch-006.patch",
+        "breaks": ["break-006.json"]
+      },
+      {
+        "patch": "patch-007.patch",
+        "breaks": ["break-007.json"]
+      },
+      {
+        "patch": "patch-008.patch",
+        "breaks": ["break-008.json"]
+      },
+      {
+        "patch": "patch-010.patch",
+        "breaks": ["break-010.json"]
+      }
+    ]
+  }

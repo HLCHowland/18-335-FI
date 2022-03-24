@@ -1,0 +1,14 @@
+diff --git a/logappend.c b/logappend.c
+index c7ff1b7..71db7ae 100755
+--- a/logappend.c
++++ b/logappend.c
+@@ -70,6 +70,9 @@ CmdLineResult parse_cmdline(int argc, char *argv[], int is_batch) {
+             }
+ 	    //timestamp
+ 	    R.ts = atoi(optarg);
++        if (R.ts <= 0 || R.ts > 1073741823){
++            invalidinput = true;
++        }
+         nonbatch= true;
+         break;
+ 

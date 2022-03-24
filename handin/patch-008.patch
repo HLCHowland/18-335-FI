@@ -1,0 +1,13 @@
+diff --git a/logappend.c b/logappend.c
+index 20bfff8..ab5b4fb 100755
+--- a/logappend.c
++++ b/logappend.c
+@@ -177,6 +177,8 @@ CmdLineResult parse_cmdline(int argc, char *argv[], int is_batch) {
+ 
+       default:
+         //unknown option, leave
++        printf("invalid\n");
++        exit(255);
+         break;
+     }
+     if(invalidinput){

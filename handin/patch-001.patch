@@ -1,0 +1,173 @@
+diff --git a/crypto.c b/crypto.c
+index fa435d1..88716bb 100644
+--- a/crypto.c
++++ b/crypto.c
+@@ -5,7 +5,7 @@
+ #include <math.h>
+ #include "crypto.h"
+ 
+-int encrypt(char *source_file,
++int encryptfile(char *source_file,
+         char key[crypto_secretstream_xchacha20poly1305_KEYBYTES])
+ {
+     unsigned char  buf_in[CHUNK_SIZE];
+@@ -77,7 +77,7 @@ int encrypt(char *source_file,
+     return 0;
+ }
+ 
+-int decrypt(char *source_file,
++int decryptfile(char *source_file,
+         char key[crypto_secretstream_xchacha20poly1305_KEYBYTES])
+ {
+     unsigned char  buf_in[CHUNK_SIZE + crypto_secretstream_xchacha20poly1305_ABYTES];
+diff --git a/crypto.h b/crypto.h
+index fe73b48..9e21eb8 100644
+--- a/crypto.h
++++ b/crypto.h
+@@ -6,5 +6,5 @@
+ #define CRYPTO_ABYTE_SIZE 17
+ #define CRYPTO_FINAL_SIZE 3
+ 
+-int encrypt(char *source_file, char key[crypto_secretstream_xchacha20poly1305_KEYBYTES]);
+-int decrypt( char *source_file, char key[crypto_secretstream_xchacha20poly1305_KEYBYTES]);
+\ No newline at end of file
++int encryptfile(char *source_file, char key[crypto_secretstream_xchacha20poly1305_KEYBYTES]);
++int decryptfile( char *source_file, char key[crypto_secretstream_xchacha20poly1305_KEYBYTES]);
+\ No newline at end of file
+diff --git a/logappend.c b/logappend.c
+index 496cbe7..c7ff1b7 100755
+--- a/logappend.c
++++ b/logappend.c
+@@ -10,6 +10,8 @@
+ #include <err.h>
+ #include <errno.h>
+ #include <assert.h>
++#include <ctype.h>
++
+ 
+ #include "data.h"
+ #include "crypto.h"
+@@ -36,6 +38,7 @@ typedef struct _CmdLineResult {
+ CmdLineResult parse_cmdline(int argc, char *argv[], int is_batch) {
+   CmdLineResult R = { -1, NULL, 0, false, false, NULL, 0, -1, NULL, 0, NULL};
+   int opt = -1;
++  bool invalidinput = false;
+   bool EGchecked = false;
+   bool ALchecked = false;
+   bool nonbatch = false;
+@@ -59,6 +62,12 @@ CmdLineResult parse_cmdline(int argc, char *argv[], int is_batch) {
+ 	    break;  
+ 
+       case 'T':
++        for (int i = 0; i < strlen(optarg); i++){
++                if (!isdigit(optarg[i])){
++                    invalidinput = true;
++                    break;
++                }
++            }
+ 	    //timestamp
+ 	    R.ts = atoi(optarg);
+         nonbatch= true;
+@@ -143,6 +152,10 @@ CmdLineResult parse_cmdline(int argc, char *argv[], int is_batch) {
+         //unknown option, leave
+         break;
+     }
++    if(invalidinput){
++        printf("invalid\n");
++        exit(255);
++    }
+ 
+   }
+   
+@@ -259,11 +272,11 @@ int main(int argc, char *argv[]) {
+         fwrite(token_len_str, 1, 4, log_fp);
+         fwrite(R.token, 1, R.token_len, log_fp);
+         fclose(log_fp);
+-        encrypt(R.logpath, R.token);
++        encryptfile(R.logpath, R.token);
+     }
+ 
+     // Second step: check if token matches the one in existing log
+-    decrypt(R.logpath, R.token);
++    decryptfile(R.logpath, R.token);
+ 
+     // Open log read-only
+     log_fp = fopen(R.logpath, "r");
+@@ -277,7 +290,7 @@ int main(int argc, char *argv[]) {
+     // Compare tokens
+     if (strcmp(buf_r, R.token) != 0) {
+         printf("invalid");
+-        encrypt(R.logpath, R.token);
++        encryptfile(R.logpath, R.token);
+         exit(255);
+     }
+ 
+@@ -327,24 +340,24 @@ int main(int argc, char *argv[]) {
+         if (R.roomID==-1 && current_location!=-2) {
+             // Person already in gallery entering again
+             printf("invalid\n");
+-            encrypt(R.logpath, R.token);
++            encryptfile(R.logpath, R.token);
+             exit(255);
+         }
+         if (R.roomID>=0 && current_location!=-1) {
+             printf("invalid\n");
+-            encrypt(R.logpath, R.token);
++            encryptfile(R.logpath, R.token);
+             exit(255);
+         }
+     } else {
+         if (R.roomID != current_location) {
+             printf("invalid\n");
+-            encrypt(R.logpath, R.token);
++            encryptfile(R.logpath, R.token);
+             exit(255);
+         }
+     }
+     if (R.ts < last_ts) {
+         printf("invalid\n");
+-        encrypt(R.logpath, R.token);
++        encryptfile(R.logpath, R.token);
+         exit(255);
+     }
+ 
+@@ -362,7 +375,7 @@ int main(int argc, char *argv[]) {
+     fwrite(buf, 1, buf_len, log_fp);
+     fclose(log_fp);
+     free(buf);
+-    encrypt(R.logpath, R.token);
++    encryptfile(R.logpath, R.token);
+             
+   return 0;
+ }
+diff --git a/logread.c b/logread.c
+index 2d90d57..bea9368 100755
+--- a/logread.c
++++ b/logread.c
+@@ -348,7 +348,7 @@ int main(int argc, char *argv[]) {
+     }
+     
+     // Decrypt the logfile prior to reading
+-    decrypt(logpath, token);
++    decryptfile(logpath, token);
+ 
+     log_fp = fopen(logpath, "r");
+     char *buf_r;
+@@ -361,7 +361,7 @@ int main(int argc, char *argv[]) {
+     // Compare tokens
+     if (strcmp(buf_r, token) != 0) {
+         printf("invalid");
+-        encrypt(logpath, token);
++        encryptfile(logpath, token);
+         exit(255);
+     }
+ 
+@@ -400,7 +400,7 @@ int main(int argc, char *argv[]) {
+     struct Person *first = NULL;
+     fclose(log_fp);
+ 
+-    encrypt(logpath, token);
++    encryptfile(logpath, token);
+ 
+     if(logpath!=NULL){
+     if(print_S==true){

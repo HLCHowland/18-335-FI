@@ -1,0 +1,29 @@
+diff --git a/logappend.c b/logappend.c
+index ea33fec..def00c1 100755
+--- a/logappend.c
++++ b/logappend.c
+@@ -42,7 +42,7 @@ CmdLineResult parse_cmdline(int argc, char *argv[], int is_batch) {
+   bool EGchecked = false;
+   bool ALchecked = false;
+   bool nonbatch = false;
+-
++  bool kexist = false;
+   //argument data
+   char    *logpath = NULL;
+   char    *batchpath = NULL;
+@@ -78,11 +78,15 @@ CmdLineResult parse_cmdline(int argc, char *argv[], int is_batch) {
+ 
+       case 'K':
+ 	    //secret token
++        if(kexist){
++            invalidinput = true;
++        }
+ 	    R.token_len = strlen(optarg) + 1;
+         token = malloc(R.token_len);
+         memcpy(token, optarg, R.token_len);
+         R.token = token;
+         nonbatch= true;
++        kexist = true;
+         break;
+ 
+       case 'A':
