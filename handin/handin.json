@@ -3,7 +3,7 @@
     "fixes": [
       {
         "patch": "buff_corruption-break-002.patch",
-        "breaks": ["break-002.json"]
+        "breaks": ["break-002.json","break-013.json"]
       },
       {
         "patch": "patch-001.patch",
@@ -35,7 +35,7 @@
       },
       {
         "patch": "patch-000.patch",
-        "breaks": ["break-000.json"]
+        "breaks": ["break-000.json","break-012.json"]
       }
     ]
   }
