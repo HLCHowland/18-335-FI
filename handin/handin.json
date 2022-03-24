@@ -32,6 +32,10 @@
       {
         "patch": "patch-010.patch",
         "breaks": ["break-010.json"]
+      },
+      {
+        "patch": "patch-000.patch",
+        "breaks": ["break-000.json"]
       }
     ]
   }

@@ -384,7 +384,7 @@ int main(int argc, char *argv[]) {
             exit(255);
         }
     }
-    if (R.ts < last_ts) {
+    if (R.ts <= last_ts) {
         printf("invalid\n");
         encryptfile(R.logpath, R.token);
         exit(255);
