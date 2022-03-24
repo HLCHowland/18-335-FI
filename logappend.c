@@ -116,6 +116,14 @@ CmdLineResult parse_cmdline(int argc, char *argv[], int is_batch) {
         R.name_len = strlen(optarg) + 1;
         name = malloc(R.name_len);
         memcpy(name, optarg, R.name_len);
+
+        //check name consist of character
+        for (int i = 0; i < strlen(name); i++){
+            if (!isalpha(name[i])){
+                invalidinput = true;
+                break;
+            }
+        }
         R.name = name;
         R.is_employee = true;
         
@@ -133,6 +141,15 @@ CmdLineResult parse_cmdline(int argc, char *argv[], int is_batch) {
         R.name_len = strlen(optarg) + 1;
         name = malloc(R.name_len);
         memcpy(name, optarg, R.name_len);
+
+        //check name consist of character
+        for (int i = 0; i < strlen(name); i++){
+            if (!isalpha(name[i])){
+                invalidinput = true;
+                break;
+            }
+        }
+
         R.name = name;
         R.is_employee = false;
         
