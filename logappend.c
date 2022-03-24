@@ -169,10 +169,6 @@ CmdLineResult parse_cmdline(int argc, char *argv[], int is_batch) {
       case 'R':
         //room ID
         R.roomID = atoi(optarg);
-        if (R.roomID < 0 || R.roomID > 1073741823){
-            invalidinput = true;
-        }
-
         nonbatch= true;
         break;
 
